@@ -29,7 +29,6 @@
             min-height: 100vh;
         }
 
-        /* Ambient background */
         body::before {
             content: '';
             position: fixed;
@@ -135,7 +134,6 @@
             pointer-events: none;
         }
 
-        /* Table */
         .data-table {
             width: 100%;
             border-collapse: separate;
@@ -198,7 +196,6 @@
         .status-badge.ivc .dot { background: #34d399; }
         .status-badge.vc .dot { background: #fb7185; }
 
-        /* Export dropdown */
         .export-menu {
             display: none;
             position: absolute;
@@ -239,7 +236,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Toast */
         .toast-item {
             animation: toastSlide 0.35s cubic-bezier(0.16,1,0.3,1), toastFade 0.3s ease 2.4s forwards;
         }
@@ -251,13 +247,11 @@
             to { opacity: 0; transform: translateX(20px); }
         }
 
-        /* Scrollbar */
         ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #334155; }
 
-        /* Progress bar for ratio */
         .ratio-bar-track {
             height: 6px;
             background: rgba(148,163,184,0.08);
@@ -272,20 +266,6 @@
             transition: width 0.6s cubic-bezier(0.16,1,0.3,1);
         }
 
-        /* Step connector line */
-        .step-connector {
-            position: absolute;
-            top: 50%;
-            left: calc(100% + 1px);
-            width: calc(100% - 2px);
-            height: 1px;
-            background: linear-gradient(90deg, rgba(99,102,241,0.2), rgba(16,185,129,0.2));
-        }
-
-        @media (max-width: 1023px) {
-            .step-connector { display: none; }
-        }
-
         .table-wrap {
             max-height: 480px;
             overflow-y: auto;
@@ -294,14 +274,38 @@
             border: 1px solid rgba(148,163,184,0.06);
             background: rgba(2,6,23,0.5);
         }
+
+        /* Logic diagram */
+        .logic-flow {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .logic-step {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+            border: 1px solid;
+        }
+        .logic-arrow {
+            color: #475569;
+            font-size: 10px;
+        }
+
+        @media (max-width: 1023px) {
+            .step-connector { display: none; }
+        }
     </style>
 </head>
 <body class="antialiased pb-16">
 
-    <!-- Toast Container -->
     <div id="toastContainer" class="fixed bottom-6 right-6 z-[999] flex flex-col gap-2.5"></div>
 
-    <!-- Navbar -->
     <nav class="border-b border-white/[0.04] bg-[#060b18]/80 backdrop-blur-xl sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-6 h-[60px] flex items-center justify-between">
             <div class="flex items-center gap-3.5">
@@ -324,6 +328,43 @@
     </nav>
 
     <main class="max-w-7xl mx-auto px-6 mt-10">
+
+        <!-- Logic Explanation Banner -->
+        <div class="card p-5 mb-8">
+            <div class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <i class="fa-solid fa-diagram-project text-amber-400 text-xs"></i>
+                </div>
+                <div>
+                    <h3 class="text-xs font-bold text-white mb-2">Logika Pencarian Frozen Date</h3>
+                    <div class="logic-flow">
+                        <span class="logic-step bg-indigo-500/8 border-indigo-500/20 text-indigo-300">
+                            <i class="fa-solid fa-calendar-day text-[10px]"></i> Activity Date
+                        </span>
+                        <i class="fa-solid fa-arrow-right logic-arrow"></i>
+                        <span class="logic-step bg-emerald-500/8 border-emerald-500/20 text-emerald-300">
+                            Cari H-5 terdekat
+                        </span>
+                        <i class="fa-solid fa-arrow-right logic-arrow"></i>
+                        <span class="logic-step bg-slate-500/8 border-slate-500/20 text-slate-300">
+                            Mundur sampai H-30
+                        </span>
+                        <i class="fa-solid fa-arrow-right logic-arrow"></i>
+                        <span class="logic-step bg-emerald-500/8 border-emerald-500/20 text-emerald-300">
+                            Ambil yang paling dekat dengan Activity
+                        </span>
+                        <i class="fa-solid fa-arrow-right logic-arrow"></i>
+                        <span class="logic-step bg-rose-500/8 border-rose-500/20 text-rose-300">
+                            Tidak ada? = VC
+                        </span>
+                    </div>
+                    <p class="text-[10px] text-slate-600 mt-2.5 leading-relaxed">
+                        <i class="fa-solid fa-circle-info mr-1"></i>
+                        Dari semua frozen date milik customer yang berada di rentang H-5 s/d H-30 sebelum activity date, dipilih yang selisih harinya paling kecil (paling mendekati activity date). Jika tidak ada frozen date di rentang tersebut, status = VC.
+                    </p>
+                </div>
+            </div>
+        </div>
 
         <!-- Step Indicator -->
         <div class="hidden lg:flex items-center justify-center gap-0 mb-10 relative">
@@ -400,7 +441,6 @@
             <div class="card-header-bar bg-gradient-to-r from-indigo-600 via-purple-500 to-emerald-500"></div>
             <div class="p-6">
 
-                <!-- Result Header -->
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-7">
                     <div>
                         <h2 class="text-base font-bold text-white flex items-center gap-2">
@@ -439,7 +479,6 @@
                     </div>
                 </div>
 
-                <!-- Stat Cards -->
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-7">
                     <div class="stat-card bg-[#060b18]/50 border border-slate-800/50 rounded-2xl p-5">
                         <div class="stat-glow bg-slate-400"></div>
@@ -486,7 +525,6 @@
                     </div>
                 </div>
 
-                <!-- Table -->
                 <div class="table-wrap">
                     <table class="data-table">
                         <thead>
@@ -506,7 +544,6 @@
         </div>
     </main>
 
-    <!-- Footer -->
     <footer class="relative z-1 mt-16 border-t border-white/[0.03]">
         <div class="max-w-7xl mx-auto px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
             <span class="text-[11px] text-slate-600">Retention Analytics v2 &mdash; Internal Use Only</span>
@@ -518,7 +555,7 @@
         let masterFrozenDB = {};
         let finalResults = [];
 
-        // Live clock
+        /* ==================== CLOCK ==================== */
         function updateClock() {
             const now = new Date();
             const el = document.getElementById('liveClock');
@@ -529,7 +566,7 @@
         updateClock();
         setInterval(updateClock, 1000);
 
-        // Step indicator updates
+        /* ==================== STEP INDICATOR ==================== */
         function updateStepIndicator(step) {
             const s2c = document.getElementById('step2Circle');
             const s2l = document.getElementById('step2Label');
@@ -545,6 +582,7 @@
             }
         }
 
+        /* ==================== DATE UTILS ==================== */
         const BULAN = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
 
         function formatDateDDMMMYYY(dateObj) {
@@ -552,32 +590,58 @@
             const dd = String(dateObj.getDate()).padStart(2, '0');
             const mmm = BULAN[dateObj.getMonth()];
             const yyy = dateObj.getFullYear();
-            return `${dd}-${mmm}-${yyy}`;
+            return dd + '-' + mmm + '-' + yyy;
         }
 
+        /**
+         * Parse tanggal fleksibel: DD/MM/YYYY, DD-MM-YYYY, YYYY-MM-DD, dsb.
+         * Mengembalikan Date object atau null.
+         */
         function parseFlexibleDate(dateStr) {
             if (!dateStr) return null;
             dateStr = dateStr.trim();
+
+            // Coba parse native dulu (cocok untuk YYYY-MM-DD)
             let d = new Date(dateStr);
             if (!isNaN(d.getTime())) return d;
+
+            // Coba format DD/MM/YYYY atau DD-MM-YYYY
             const parts = dateStr.split(/[\/\-]/);
             if (parts.length === 3) {
                 if (parts[0].length <= 2) {
                     const day = parseInt(parts[0], 10);
                     const month = parseInt(parts[1], 10) - 1;
-                    const year = parseInt(parts[2], 10);
-                    const fullYear = year < 100 ? 2000 + year : year;
-                    d = new Date(fullYear, month, day);
+                    let year = parseInt(parts[2], 10);
+                    if (year < 100) year = 2000 + year;
+                    d = new Date(year, month, day);
                     if (!isNaN(d.getTime())) return d;
                 }
             }
             return null;
         }
 
+        /**
+         * Normalisasi Date ke tengah hari (00:00:00) tanpa memutasi objek asli.
+         * Mengembalikan timestamp (number).
+         */
+        function toMidnightTimestamp(dateObj) {
+            return new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()).getTime();
+        }
+
+        /**
+         * Hitung selisih hari antara dua Date (hasil selalu positif jika dateA > dateB).
+         * Tidak memutasi objek manapun.
+         */
+        function diffInDays(dateA, dateB) {
+            const msPerDay = 1000 * 60 * 60 * 24;
+            return Math.round((toMidnightTimestamp(dateA) - toMidnightTimestamp(dateB)) / msPerDay);
+        }
+
+        /* ==================== INPUT PARSER ==================== */
         function parseInputText(text) {
             const lines = text.split(/\r?\n/);
             const data = [];
-            lines.forEach(line => {
+            lines.forEach(function(line) {
                 if (!line.trim()) return;
                 const columns = line.split(/\t|,|;/);
                 if (columns.length >= 2) {
@@ -587,6 +651,7 @@
             return data;
         }
 
+        /* ==================== PROCESS FROZEN ==================== */
         function processFrozenData() {
             const txt = document.getElementById('frozenInput').value;
             const parsed = parseInputText(txt);
@@ -594,9 +659,11 @@
                 showToast('Gagal membaca data! Pastikan input memiliki minimal 2 kolom.', 'error');
                 return;
             }
+
             masterFrozenDB = {};
             let validCount = 0;
-            parsed.forEach(row => {
+
+            parsed.forEach(function(row) {
                 const dateObj = parseFlexibleDate(row.dateRaw);
                 if (dateObj) {
                     if (!masterFrozenDB[row.id]) masterFrozenDB[row.id] = [];
@@ -604,19 +671,65 @@
                     validCount++;
                 }
             });
+
+            // Sort ascending per customer agar pencarian dari belakang = terdekat ke activity
             for (let id in masterFrozenDB) {
-                masterFrozenDB[id].sort((a, b) => a - b);
+                masterFrozenDB[id].sort(function(a, b) { return a - b; });
             }
+
             const badge = document.getElementById('frozenCount');
-            badge.innerText = validCount + " baris";
-            badge.className = "text-[11px] bg-indigo-500/10 text-indigo-400 px-2.5 py-1 rounded-lg border border-indigo-500/20 font-semibold tabular-nums";
+            badge.innerText = validCount + ' baris';
+            badge.className = 'text-[11px] bg-indigo-500/10 text-indigo-400 px-2.5 py-1 rounded-lg border border-indigo-500/20 font-semibold tabular-nums';
             updateStepIndicator(1);
-            showToast(`Berhasil mengunci ${validCount} baris data Master Frozen.`, 'success');
+            showToast('Berhasil mengunci ' + validCount + ' baris data Master Frozen.', 'success');
+        }
+
+        /* ==================== MATCHING ENGINE ==================== */
+        /**
+         * Logika utama:
+         * 1. Ambil semua frozen date milik customer yang sama
+         * 2. Frozen date sudah di-sort ascending, jadi iterasi dari belakang (terbaru → terlama)
+         * 3. Hitung selisih hari = activityDate - frozenDate
+         * 4. Ambil frozen date PERTAMA yang selisihnya di rentang [5, 30]
+         *    → Karena iterasi dari terbaru, yang pertama cocok = yang paling dekat dengan activity
+         * 5. Jika selisih > 30, stop pencarian (tanggal sebelumnya pasti makin jauh)
+         * 6. Jika tidak ada yang cocok → VC
+         */
+        function findClosestFrozenDate(activityDate, frozenDates) {
+            let bestMatch = null;
+            let bestDiff = -1;
+
+            // Iterasi dari frozen date terbaru ke terlama
+            for (let i = frozenDates.length - 1; i >= 0; i--) {
+                const fDate = frozenDates[i];
+                const diffDays = diffInDays(activityDate, fDate);
+
+                if (diffDays < 5) {
+                    // Frozen date terlalu dekat (< H-5), lanjut ke tanggal lebih lama
+                    continue;
+                }
+
+                if (diffDays > 30) {
+                    // Sudah melewati batas H-30, tanggal sebelumnya pasti makin jauh → stop
+                    break;
+                }
+
+                // diffDays ada di rentang [5, 30] → ini yang terdekat karena iterasi dari terbaru
+                bestMatch = fDate;
+                bestDiff = diffDays;
+                break;
+            }
+
+            return {
+                matchedDate: bestMatch,
+                diffDays: bestDiff
+            };
         }
 
         function runMatching() {
             const txt = document.getElementById('activityInput').value;
             const parsedActivity = parseInputText(txt);
+
             if (Object.keys(masterFrozenDB).length === 0) {
                 showToast('Data Master Frozen belum dikunci!', 'error');
                 return;
@@ -625,60 +738,65 @@
                 showToast('Silakan masukkan data Activity terlebih dahulu.', 'error');
                 return;
             }
+
             finalResults = [];
-            let countIVC = 0, countVC = 0;
-            parsedActivity.forEach(actRow => {
+            let countIVC = 0;
+            let countVC = 0;
+
+            parsedActivity.forEach(function(actRow) {
                 const actDate = parseFlexibleDate(actRow.dateRaw);
                 const custId = actRow.id;
+
                 let matchedFrozenDate = null;
-                let minDiffDays = -1;
+                let gapDays = null;
+
                 if (actDate && masterFrozenDB[custId]) {
-                    const frozenDates = masterFrozenDB[custId];
-                    for (let i = frozenDates.length - 1; i >= 0; i--) {
-                        const fDate = frozenDates[i];
-                        const diffTime = actDate.setHours(0,0,0,0) - fDate.setHours(0,0,0,0);
-                        const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
-                        if (diffDays >= 5 && diffDays <= 30) {
-                            matchedFrozenDate = fDate;
-                            minDiffDays = diffDays;
-                            break;
-                        }
-                    }
+                    const result = findClosestFrozenDate(actDate, masterFrozenDB[custId]);
+                    matchedFrozenDate = result.matchedDate;
+                    gapDays = result.diffDays;
                 }
+
                 const isFound = (matchedFrozenDate !== null);
-                if (isFound) countIVC++; else countVC++;
+                if (isFound) {
+                    countIVC++;
+                } else {
+                    countVC++;
+                }
+
                 finalResults.push({
                     custId: custId,
                     activityDateFormatted: actDate ? formatDateDDMMMYYY(actDate) : actRow.dateRaw,
                     frozenDateFormatted: isFound ? formatDateDDMMMYYY(matchedFrozenDate) : '-',
-                    gapDays: isFound ? minDiffDays : null,
-                    gapDaysText: isFound ? minDiffDays + " hari" : "-",
+                    gapDays: gapDays,
+                    gapDaysText: isFound ? gapDays + ' hari' : '-',
                     status: isFound ? 'IVC' : 'VC'
                 });
             });
+
             renderResultsTable(countIVC, countVC);
             updateStepIndicator(3);
-            showToast(`Selesai: ${countIVC} IVC, ${countVC} VC dari ${finalResults.length} data.`, 'success');
+            showToast('Selesai: ' + countIVC + ' IVC, ' + countVC + ' VC dari ' + finalResults.length + ' data.', 'success');
         }
 
+        /* ==================== RENDER TABLE ==================== */
         function renderResultsTable(ivc, vc) {
             const tbody = document.getElementById('resultTableBody');
             tbody.innerHTML = '';
-            finalResults.forEach((row, idx) => {
+
+            finalResults.forEach(function(row, idx) {
                 const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="text-slate-600 font-mono text-[11px] tabular-nums">${idx + 1}</td>
-                    <td class="font-semibold text-white">${row.custId}</td>
-                    <td class="font-mono text-slate-400 text-[12px]">${row.activityDateFormatted}</td>
-                    <td class="font-mono ${row.frozenDateFormatted !== '-' ? 'text-indigo-300' : 'text-slate-700'} text-[12px]">${row.frozenDateFormatted}</td>
-                    <td class="tabular-nums ${row.gapDays !== null ? 'text-slate-300 font-medium' : 'text-slate-700'}">${row.gapDaysText}</td>
-                    <td class="text-center">
-                        <span class="status-badge ${row.status === 'IVC' ? 'ivc' : 'vc'}">
-                            <span class="dot"></span>
-                            ${row.status}
-                        </span>
-                    </td>
-                `;
+                tr.innerHTML =
+                    '<td class="text-slate-600 font-mono text-[11px] tabular-nums">' + (idx + 1) + '</td>' +
+                    '<td class="font-semibold text-white">' + row.custId + '</td>' +
+                    '<td class="font-mono text-slate-400 text-[12px]">' + row.activityDateFormatted + '</td>' +
+                    '<td class="font-mono ' + (row.frozenDateFormatted !== '-' ? 'text-indigo-300' : 'text-slate-700') + ' text-[12px]">' + row.frozenDateFormatted + '</td>' +
+                    '<td class="tabular-nums ' + (row.gapDays !== null ? 'text-slate-300 font-medium' : 'text-slate-700') + '">' + row.gapDaysText + '</td>' +
+                    '<td class="text-center">' +
+                        '<span class="status-badge ' + (row.status === 'IVC' ? 'ivc' : 'vc') + '">' +
+                            '<span class="dot"></span>' +
+                            row.status +
+                        '</span>' +
+                    '</td>';
                 tbody.appendChild(tr);
             });
 
@@ -690,15 +808,17 @@
             document.getElementById('statVC').innerText = vc.toLocaleString('id-ID');
             document.getElementById('statPct').innerText = pct + '%';
             document.getElementById('ratioBar').style.width = pct + '%';
-            document.getElementById('resultSubtitle').innerText = `Menampilkan ${total.toLocaleString('id-ID')} data — diproses pada ${new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}`;
-            document.getElementById('activityCount').innerText = total + " baris";
-            document.getElementById('activityCount').className = "text-[11px] bg-emerald-500/10 text-emerald-400 px-2.5 py-1 rounded-lg border border-emerald-500/20 font-semibold tabular-nums";
+            document.getElementById('resultSubtitle').innerText = 'Menampilkan ' + total.toLocaleString('id-ID') + ' data — diproses pada ' + new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+            const actBadge = document.getElementById('activityCount');
+            actBadge.innerText = total + ' baris';
+            actBadge.className = 'text-[11px] bg-emerald-500/10 text-emerald-400 px-2.5 py-1 rounded-lg border border-emerald-500/20 font-semibold tabular-nums';
 
             document.getElementById('resultSection').classList.remove('hidden');
             document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
-        // === EXPORT ===
+        /* ==================== EXPORT ==================== */
         function toggleExportMenu() {
             document.getElementById('exportDropdown').classList.toggle('open');
         }
@@ -706,37 +826,32 @@
             document.getElementById('exportDropdown').classList.remove('open');
         }
         document.addEventListener('click', function(e) {
-            const dd = document.getElementById('exportDropdown');
-            const btn = document.getElementById('exportBtn');
+            var dd = document.getElementById('exportDropdown');
+            var btn = document.getElementById('exportBtn');
             if (dd && btn && !dd.contains(e.target) && !btn.contains(e.target)) {
                 dd.classList.remove('open');
             }
         });
 
         function getExportData() {
-            const header = ['No', 'Customer ID', 'Activity Date', 'Matched Frozen Date', 'Selisih Hari', 'Status'];
-            const rows = finalResults.map((r, i) => [
-                i + 1,
-                r.custId,
-                r.activityDateFormatted,
-                r.frozenDateFormatted,
-                r.gapDaysText,
-                r.status
-            ]);
-            return [header, ...rows];
+            var header = ['No', 'Customer ID', 'Activity Date', 'Matched Frozen Date', 'Selisih Hari', 'Status'];
+            var rows = finalResults.map(function(r, i) {
+                return [i + 1, r.custId, r.activityDateFormatted, r.frozenDateFormatted, r.gapDaysText, r.status];
+            });
+            return [header].concat(rows);
         }
 
         function getFileName() {
-            return `Retention_${formatDateDDMMMYYY(new Date())}`;
+            return 'Retention_' + formatDateDDMMMYYY(new Date());
         }
 
         function exportToCSV() {
             if (finalResults.length === 0) return;
-            const data = getExportData();
-            let csv = "\uFEFF" + data.map(row => row.join(';')).join('\n');
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
+            var data = getExportData();
+            var csv = '\uFEFF' + data.map(function(row) { return row.join(';'); }).join('\n');
+            var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
             a.href = url;
             a.download = getFileName() + '.csv';
             document.body.appendChild(a);
@@ -748,39 +863,37 @@
 
         function exportToExcel() {
             if (finalResults.length === 0) return;
-            const data = getExportData();
-            const ws = XLSX.utils.aoa_to_sheet(data);
+            var data = getExportData();
+            var ws = XLSX.utils.aoa_to_sheet(data);
             ws['!cols'] = [
                 { wch: 6 },
                 { wch: 18 },
                 { wch: 16 },
                 { wch: 22 },
                 { wch: 14 },
-                { wch: 10 },
+                { wch: 10 }
             ];
-            const wb = XLSX.utils.book_new();
+            var wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, 'Hasil Matching');
             XLSX.writeFile(wb, getFileName() + '.xlsx');
             showToast('File Excel berhasil diunduh.', 'success');
         }
 
-        // === TOAST ===
+        /* ==================== TOAST ==================== */
         function showToast(message, type) {
-            const container = document.getElementById('toastContainer');
-            const el = document.createElement('div');
-            const isErr = type === 'error';
-            el.className = `toast-item flex items-center gap-3 px-5 py-3.5 rounded-xl shadow-2xl border text-[13px] font-medium max-w-sm ${
-                isErr
+            var container = document.getElementById('toastContainer');
+            var el = document.createElement('div');
+            var isErr = type === 'error';
+            el.className = 'toast-item flex items-center gap-3 px-5 py-3.5 rounded-xl shadow-2xl border text-[13px] font-medium max-w-sm ' +
+                (isErr
                     ? 'bg-rose-950/90 border-rose-800/40 text-rose-200'
-                    : 'bg-emerald-950/90 border-emerald-800/40 text-emerald-200'
-            }`;
+                    : 'bg-emerald-950/90 border-emerald-800/40 text-emerald-200');
             el.style.backdropFilter = 'blur(16px)';
-            el.innerHTML = `
-                <i class="${isErr ? 'fa-solid fa-circle-exclamation text-rose-400' : 'fa-solid fa-circle-check text-emerald-400'} text-sm flex-shrink-0"></i>
-                <span>${message}</span>
-            `;
+            el.innerHTML =
+                '<i class="' + (isErr ? 'fa-solid fa-circle-exclamation text-rose-400' : 'fa-solid fa-circle-check text-emerald-400') + ' text-sm flex-shrink-0"></i>' +
+                '<span>' + message + '</span>';
             container.appendChild(el);
-            setTimeout(() => { if (el.parentNode) el.parentNode.removeChild(el); }, 2800);
+            setTimeout(function() { if (el.parentNode) el.parentNode.removeChild(el); }, 2800);
         }
     </script>
 </body>
